@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MIRA | Multimodal Intelligent Reasoning Assistant</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Arial,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left,#123b72 0%,transparent 35%),
+        radial-gradient(circle at bottom right,#0a2a55 0%,transparent 35%),
+        #020817;
+    color:#fff;
+}
+
+/* NAVBAR */
+.navbar{
+    width:100%;
+    padding:18px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid rgba(0,212,255,.15);
+    background:rgba(2,8,23,.75);
+    backdrop-filter:blur(15px);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:800;
+    color:#00d4ff;
+    letter-spacing:1px;
+}
+
+.logo span{
+    color:white;
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.status{
+    font-size:13px;
+    color:#54f3a5;
+}
+
+.logout-btn{
+    border:1px solid #168cff;
+    background:transparent;
+    color:white;
+    padding:9px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.logout-btn:hover{
+    background:#168cff;
+}
+
+/* HERO */
+.hero{
+    padding:65px 6% 40px;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:48px;
+    margin-bottom:15px;
+    background:linear-gradient(90deg,#168cff,#00d4ff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    color:#9db1ca;
+    max-width:760px;
+    margin:auto;
+    line-height:1.7;
+}
+
+/* MODE SECTION */
+.modes-section{
+    width:88%;
+    max-width:1300px;
+    margin:30px auto;
+}
+
+.section-title{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.section-subtitle{
+    color:#8298b5;
+    margin-bottom:25px;
+}
+
+.mode-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.mode-card{
+    background:linear-gradient(
+        145deg,
+        rgba(13,35,66,.9),
+        rgba(4,17,37,.95)
+    );
+    border:1px solid rgba(0,212,255,.16);
+    border-radius:18px;
+    padding:25px 20px;
+    min-height:205px;
+    transition:.25s;
+    cursor:pointer;
+}
+
+.mode-card:hover{
+    transform:translateY(-5px);
+    border-color:#00bfff;
+    box-shadow:0 15px 45px rgba(0,180,255,.12);
+}
+
+.mode-icon{
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,180,255,.1);
+    font-size:26px;
+    margin-bottom:15px;
+}
+
+.mode-card h3{
+    margin-bottom:8px;
+}
+
+.mode-card p{
+    color:#8298b5;
+    font-size:13px;
+    line-height:1.5;
+    min-height:42px;
+}
+
+.mode-button{
+    margin-top:15px;
+    border:0;
+    background:linear-gradient(90deg,#087cff,#00b7ff);
+    color:white;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+/* WORKSPACE */
+.workspace{
+    display:none;
+    width:88%;
+    max-width:1300px;
+    margin:40px auto 70px;
+}
+
+.workspace.active{
+    display:block;
+}
+
+.workspace-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.workspace-title h2{
+    font-size:28px;
+}
+
+.workspace-title p{
+    color:#8197b4;
+    margin-top:5px;
+}
+
+.back-btn{
+    background:rgba(255,255,255,.05);
+    color:white;
+    border:1px solid rgba(255,255,255,.15);
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.back-btn:hover{
+    border-color:#00d4ff;
+}
+
+/* ANALYSIS BOX */
+.analysis-box{
+    background:rgba(5,20,42,.88);
+    border:1px solid rgba(0,212,255,.18);
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.question-label{
+    display:block;
+    font-weight:700;
+    margin-bottom:9px;
+}
+
+textarea{
+    width:100%;
+    min-height:115px;
+    resize:vertical;
+    background:#020b1b;
+    border:1px solid #193b60;
+    border-radius:12px;
+    padding:15px;
+    color:white;
+    outline:none;
+    font-size:15px;
+}
+
+textarea:focus{
+    border-color:#00c8ff;
+}
+
+/* SINGLE UPLOAD */
+.single-upload{
+    margin-top:20px;
+}
+
+.file-input{
+    display:none;
+}
+
+.upload-label{
+    display:block;
+    border:1px dashed #24608e;
+    background:rgba(0,130,255,.05);
+    padding:25px;
+    border-radius:14px;
+    text-align:center;
+    cursor:pointer;
+    color:#9cb3ce;
+}
+
+.upload-label:hover{
+    border-color:#00d4ff;
+    background:rgba(0,180,255,.08);
+}
+
+.file-name{
+    margin-top:10px;
+    color:#58d8ff;
+    font-size:14px;
+}
+
+/* MULTIMODAL */
+.multimodal-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.source-card{
+    background:#061326;
+    border:1px solid #173a5f;
+    border-radius:14px;
+    padding:18px;
+}
+
+.source-card h4{
+    margin-bottom:12px;
+}
+
+.source-card label{
+    display:block;
+    padding:12px;
+    border:1px dashed #285679;
+    border-radius:9px;
+    text-align:center;
+    color:#8fa8c4;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.source-card label:hover{
+    border-color:#00cfff;
+    color:#fff;
+}
+
+.source-name{
+    margin-top:8px;
+    color:#51d9ff;
+    font-size:12px;
+    word-break:break-all;
+}
+
+.multi-info{
+    margin-top:15px;
+    padding:12px;
+    border-radius:10px;
+    background:rgba(0,180,255,.06);
+    color:#8ea8c5;
+    font-size:13px;
+}
+
+/* BUTTONS */
+.action-row{
+    display:flex;
+    gap:12px;
+    margin-top:22px;
+}
+
+.analyze-btn{
+    flex:1;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    color:white;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    background:linear-gradient(90deg,#087cff,#00b7ff);
+}
+
+.analyze-btn:hover{
+    filter:brightness(1.1);
+}
+
+.clear-btn{
+    padding:14px 25px;
+    border:1px solid #294867;
+    border-radius:10px;
+    background:#07182c;
+    color:white;
+    cursor:pointer;
+}
+
+.clear-btn:hover{
+    border-color:#00bfff;
+}
+
+/* LOADING */
+.loading{
+    display:none;
+    text-align:center;
+    padding:25px;
+    color:#63dcff;
+}
+
+.loading.active{
+    display:block;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:3px solid #173a5d;
+    border-top-color:#00d4ff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:0 auto 12px;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+/* RESULT */
+.result-box{
+    display:none;
+    margin-top:25px;
+    background:#031024;
+    border:1px solid rgba(0,212,255,.2);
+    border-radius:18px;
+    overflow:hidden;
+}
+
+.result-box.active{
+    display:block;
+}
+
+.result-header{
+    padding:20px;
+    background:linear-gradient(
+        90deg,
+        rgba(8,124,255,.13),
+        rgba(0,212,255,.06)
+    );
+    border-bottom:1px solid #163756;
+}
+
+.result-header h3{
+    color:#5ce0ff;
+}
+
+.result-content{
+    padding:22px;
+}
+
+.result-section{
+    margin-bottom:20px;
+}
+
+.result-section h4{
+    margin-bottom:8px;
+    color:#71ddff;
+}
+
+.result-section p,
+.result-section li{
+    color:#b5c5d8;
+    line-height:1.7;
+}
+
+.result-section ul{
+    padding-left:20px;
+}
+
+.answer{
+    font-size:18px;
+    color:white !important;
+    background:rgba(0,180,255,.05);
+    border-left:3px solid #00cfff;
+    padding:15px;
+    border-radius:8px;
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.badge{
+    padding:6px 10px;
+    border-radius:20px;
+    background:#09243d;
+    border:1px solid #1d5275;
+    color:#76ddff;
+    font-size:12px;
+}
+
+/* FOOTER */
+footer{
+    border-top:1px solid rgba(0,212,255,.12);
+    padding:25px;
+    text-align:center;
+    color:#60758f;
+}
+
+/* RESPONSIVE */
+@media(max-width:1050px){
+    .mode-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .multimodal-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:650px){
+    .hero h1{
+        font-size:35px;
+    }
+
+    .mode-grid,
+    .multimodal-grid{
+        grid-template-columns:1fr;
+    }
+
+    .workspace-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .action-row{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">MIRA <span>AI</span></div>
+
+    <div class="nav-right">
+        <div class="status">● System Ready</div>
+        <button class="logout-btn" type="button" onclick="logout()">
+            Logout
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Understand. Reason. Answer.</h1>
+
+    <p>
+        MIRA — Multimodal Intelligent Reasoning Assistant.
+        Analyze text, images, PDFs, tables, charts, audio and video,
+        or combine multiple sources into one unified reasoning task.
+    </p>
+</section>
+
+<!-- MODES -->
+<section class="modes-section" id="modesSection">
+
+    <h2 class="section-title">Choose Analysis Mode</h2>
+
+    <p class="section-subtitle">
+        Select a modality to start analysis.
+    </p>
+
+    <div class="mode-grid">
+
+        <!-- TEXT -->
+        <div class="mode-card" onclick="openMode('text')">
+            <div class="mode-icon">📝</div>
+
+            <h3>Text Analysis</h3>
+
+            <p>
+                Analyze text files and answer questions from their content.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Text Analysis
+            </button>
+        </div>
+
+        <!-- PDF -->
+        <div class="mode-card" onclick="openMode('pdf')">
+            <div class="mode-icon">📄</div>
+
+            <h3>PDF Analysis</h3>
+
+            <p>
+                Extract PDF content and reason over the document.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start PDF Analysis
+            </button>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="mode-card" onclick="openMode('image')">
+            <div class="mode-icon">🖼️</div>
+
+            <h3>Image Analysis</h3>
+
+            <p>
+                Inspect images and extract visible text using OCR.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Image Analysis
+            </button>
+        </div>
+
+        <!-- AUDIO -->
+        <div class="mode-card" onclick="openMode('audio')">
+            <div class="mode-icon">🎧</div>
+
+            <h3>Audio Analysis</h3>
+
+            <p>
+                Inspect audio files and available audio information.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Audio Analysis
+            </button>
+        </div>
+
+        <!-- VIDEO -->
+        <div class="mode-card" onclick="openMode('video')">
+            <div class="mode-icon">🎥</div>
+
+            <h3>Video Analysis</h3>
+
+            <p>
+                Analyze video metadata and available visual evidence.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Video Analysis
+            </button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="mode-card" onclick="openMode('table')">
+            <div class="mode-icon">📊</div>
+
+            <h3>Table / Excel</h3>
+
+            <p>
+                Analyze CSV and Excel data and answer numerical questions.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Table Analysis
+            </button>
+        </div>
+
+        <!-- CHART -->
+        <div class="mode-card" onclick="openMode('chart')">
+            <div class="mode-icon">📈</div>
+
+            <h3>Chart Analysis</h3>
+
+            <p>
+                Inspect chart images and extract visible information.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Chart Analysis
+            </button>
+        </div>
+
+        <!-- MULTIMODAL -->
+        <div class="mode-card" onclick="openMode('multimodal')">
+
+            <div class="mode-icon">🧠</div>
+
+            <h3>Multimodal Reasoning</h3>
+
+            <p>
+                Upload multiple different sources and ask one combined question.
+            </p>
+
+            <button class="mode-button" type="button">
+                Start Multimodal Analysis
+            </button>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- WORKSPACE -->
+<section class="workspace" id="workspace">
+
+    <div class="workspace-header">
+
+        <div class="workspace-title">
+            <h2 id="workspaceTitle">
+                Analysis Workspace
+            </h2>
+
+            <p id="workspaceDescription">
+                Upload your source and ask a question.
+            </p>
+        </div>
+
+        <button
+            class="back-btn"
+            type="button"
+            onclick="backToModes()"
+        >
+            ← Back to Modes
+        </button>
+
+    </div>
+
+    <div class="analysis-box">
+
+        <!-- QUESTION -->
+        <label class="question-label" for="question">
+            Your Question
+        </label>
+
+        <textarea
+            id="question"
+            placeholder="Ask a question about the uploaded source..."
+        ></textarea>
+
+        <!-- SINGLE FILE -->
+        <div
+            class="single-upload"
+            id="singleUploadSection"
+        >
+
+            <input
+                class="file-input"
+                type="file"
+                id="singleFile"
+                onchange="handleSingleFile(event)"
+            >
+
+            <label
+                class="upload-label"
+                for="singleFile"
+                id="singleUploadLabel"
+            >
+                📁 Click to upload a file
+            </label>
+
+            <div
+                class="file-name"
+                id="singleFileName"
+            ></div>
+
+        </div>
+
+        <!-- MULTIMODAL -->
+        <div
+            id="multimodalSection"
+            style="display:none;"
+        >
+
+            <div class="multi-info">
+                🧠 <strong>Multimodal Mode:</strong>
+                Upload multiple different types of files together.
+                MIRA will analyze all selected sources before answering
+                your single question.
+            </div>
+
+            <div class="multimodal-grid">
+
+                <!-- IMAGE -->
+                <div class="source-card">
+
+                    <h4>🖼️ Image</h4>
+
+                    <input
+                        class="file-input"
+                        type="file"
+                        id="sourceImage"
+                        accept="image/*"
+                        onchange="handleSourceFile(1,event)"
+                    >
+
+                    <label for="sourceImage">
+                        Upload Image
+                    </label>
+
+                    <div
+                        class="source-name"
+                        id="sourceName1"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- VIDEO -->
+                <div class="source-card">
+
+                    <h4>🎥 Video</h4>
+
+                    <input
+                        class="file-input"
+                        type="file"
+                        id="sourceVideo"
+                        accept="video/*"
+                        onchange="handleSourceFile(2,event)"
+                    >
+
+                    <label for="sourceVideo">
+                        Upload Video
+                    </label>
+
+                    <div
+                        class="source-name"
+                        id="sourceName2"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- AUDIO -->
+                <div class="source-card">
+
+                    <h4>🎧 Audio</h4>
+
+                    <input
+                        class="file-input"
+                        type="file"
+                        id="sourceAudio"
+                        accept="audio/*"
+                        onchange="handleSourceFile(3,event)"
+                    >
+
+                    <label for="sourceAudio">
+                        Upload Audio
+                    </label>
+
+                    <div
+                        class="source-name"
+                        id="sourceName3"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- CHART -->
+                <div class="source-card">
+
+                    <h4>📈 Chart</h4>
+
+                    <input
+                        class="file-input"
+                        type="file"
+                        id="sourceChart"
+                        accept="image/*,.csv,.xlsx,.xls"
+                        onchange="handleSourceFile(4,event)"
+                    >
+
+                    <label for="sourceChart">
+                        Upload Chart
+                    </label>
+
+                    <div
+                        class="source-name"
+                        id="sourceName4"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- TEXT / PDF -->
+                <div class="source-card">
+
+                    <h4>📄 Text / PDF</h4>
+
+                    <input
+                        class="file-input"
+                        type="file"
+                        id="sourceDocument"
+                        accept=".txt,.pdf,.md,.doc,.docx"
+                        onchange="handleSourceFile(5,event)"
+                    >
+
+                    <label for="sourceDocument">
+                        Upload Text / PDF
+                    </label>
+
+                    <div
+                        class="source-name"
+                        id="sourceName5"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- TABLE -->
+                <div class="source-card">
+
+                    <h4>📊 Table / Excel</h4>
+
+                    <input
+                        class="file-input"
+                        type="file"
+                        id="sourceTable"
+                        accept=".csv,.xlsx,.xls"
+                        onchange="handleSourceFile(6,event)"
+                    >
+
+                    <label for="sourceTable">
+                        Upload Table / Excel
+                    </label>
+
+                    <div
+                        class="source-name"
+                        id="sourceName6"
+                    >
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div
+                class="multi-info"
+                id="multiFileCount"
+            >
+                0 sources selected
+            </div>
+
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="action-row">
+
+            <button
+                id="analyzeBtn"
+                class="analyze-btn"
+                type="button"
+                onclick="analyzeCurrentMode(event)"
+            >
+                ✦ Analyze with MIRA
+            </button>
+
+            <button
+                class="clear-btn"
+                type="button"
+                onclick="clearWorkspace()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+        <!-- LOADING -->
+        <div
+            class="loading"
+            id="loading"
+        >
+
+            <div class="spinner"></div>
+
+            <p>
+                MIRA is analyzing your evidence...
+            </p>
+
+        </div>
+
+        <!-- RESULT -->
+        <div
+            class="result-box"
+            id="resultBox"
+        >
+
+            <div class="result-header">
+
+                <h3>
+                    ✦ MIRA Analysis Result
+                </h3>
+
+            </div>
+
+            <div
+                class="result-content"
+                id="resultContent"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    MIRA — Multimodal Intelligent Reasoning Assistant
+    <br>
+    Evidence-based local reasoning system
+</footer>
+
+<script>
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const BACKEND_URL = "http://127.0.0.1:5000";
+
+let currentMode = "";
+
+let selectedSingleFile = null;
+
+let multiSourceFiles = {
+    1: null,
+    2: null,
+    3: null,
+    4: null,
+    5: null,
+    6: null
+};
+
+const modeConfig = {
+
+    text: {
+        title: "Text Analysis",
+        description: "Upload a text file and ask a question about its content.",
+        accept: ".txt,.md",
+        endpoint: "/analyze/text"
+    },
+
+    pdf: {
+        title: "PDF Analysis",
+        description: "Upload a PDF document and ask a question.",
+        accept: ".pdf",
+        endpoint: "/analyze/pdf"
+    },
+
+    image: {
+        title: "Image Analysis",
+        description: "Upload an image and ask MIRA about visible evidence.",
+        accept: "image/*",
+        endpoint: "/analyze/image"
+    },
+
+    audio: {
+        title: "Audio Analysis",
+        description: "Upload an audio file for analysis.",
+        accept: "audio/*",
+        endpoint: "/analyze/audio"
+    },
+
+    video: {
+        title: "Video Analysis",
+        description: "Upload a video and ask a question about it.",
+        accept: "video/*",
+        endpoint: "/analyze/video"
+    },
+
+    table: {
+        title: "Table / Excel Analysis",
+        description: "Upload CSV or Excel data and ask a numerical question.",
+        accept: ".csv,.xlsx,.xls",
+        endpoint: "/analyze/table"
+    },
+
+    chart: {
+        title: "Chart Analysis",
+        description: "Upload a chart image and ask a question about it.",
+        accept: "image/*",
+        endpoint: "/analyze/chart"
+    },
+
+    multimodal: {
+        title: "Multimodal Reasoning",
+        description: "Combine multiple different sources and ask one cross-modal question.",
+        endpoint: "/analyze/multimodal"
+    }
+
+};
+
+
+/* =========================================================
+   OPEN MODE
+========================================================= */
+
+function openMode(mode){
+
+    currentMode = mode;
+
+    const config = modeConfig[mode];
+
+    document.getElementById("modesSection").style.display = "none";
+
+    document.getElementById("workspace").classList.add("active");
+
+    document.getElementById("workspaceTitle").textContent =
+        config.title;
+
+    document.getElementById("workspaceDescription").textContent =
+        config.description;
+
+    document.getElementById("question").value = "";
+
+    clearResultOnly();
+
+    selectedSingleFile = null;
+
+    document.getElementById("singleFile").value = "";
+
+    document.getElementById("singleFileName").textContent = "";
+
+    if(mode === "multimodal"){
+
+        document.getElementById("singleUploadSection").style.display =
+            "none";
+
+        document.getElementById("multimodalSection").style.display =
+            "block";
+
+    }else{
+
+        document.getElementById("singleUploadSection").style.display =
+            "block";
+
+        document.getElementById("multimodalSection").style.display =
+            "none";
+
+        document.getElementById("singleFile").accept =
+            config.accept || "";
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   SINGLE FILE
+========================================================= */
+
+function handleSingleFile(event){
+
+    const file = event.target.files[0];
+
+    if(!file){
+        selectedSingleFile = null;
+        document.getElementById("singleFileName").textContent = "";
+        return;
+    }
+
+    selectedSingleFile = file;
+
+    document.getElementById("singleFileName").textContent =
+        "Selected: " + file.name;
+}
+
+
+/* =========================================================
+   MULTIMODAL FILES
+========================================================= */
+
+function handleSourceFile(sourceNumber,event){
+
+    const file = event.target.files[0];
+
+    if(!file){
+
+        multiSourceFiles[sourceNumber] = null;
+
+        document.getElementById(
+            "sourceName" + sourceNumber
+        ).textContent = "";
+
+        updateMultimodalCount();
+
+        return;
+    }
+
+    multiSourceFiles[sourceNumber] = file;
+
+    document.getElementById(
+        "sourceName" + sourceNumber
+    ).textContent =
+        "✓ " + file.name;
+
+    updateMultimodalCount();
+}
+
+
+/* =========================================================
+   MULTIMODAL COUNT
+========================================================= */
+
+function updateMultimodalCount(){
+
+    const count =
+        Object.values(multiSourceFiles)
+        .filter(file => file !== null)
+        .length;
+
+    document.getElementById("multiFileCount").textContent =
+        count + " source" +
+        (count === 1 ? "" : "s") +
+        " selected";
+
+}
+
+
+/* =========================================================
+   ANALYZE
+========================================================= */
+
+async function analyzeCurrentMode(event){
+
+    if(event){
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if(event.stopImmediatePropagation){
+            event.stopImmediatePropagation();
+        }
+    }
+
+    const question =
+        document.getElementById("question")
+        .value
+        .trim();
+
+    if(!question){
+
+        alert("Please enter your question.");
+
+        return;
+    }
+
+
+    /* MULTIMODAL */
+    if(currentMode === "multimodal"){
+
+        await analyzeMultimodal(question);
+
+        return;
+    }
+
+
+    /* SINGLE */
+    if(!selectedSingleFile){
+
+        alert("Please upload a file first.");
+
+        return;
+    }
+
+
+    const config = modeConfig[currentMode];
+
+    if(!config || !config.endpoint){
+
+        showError("Invalid analysis mode.");
+
+        return;
+    }
+
+
+    const formData = new FormData();
+
+    formData.append(
+        "file",
+        selectedSingleFile,
+        selectedSingleFile.name
+    );
+
+    formData.append(
+        "question",
+        question
+    );
+
+
+    await sendAnalysis(
+        config.endpoint,
+        formData
+    );
+}
+
+
+/* =========================================================
+   MULTIMODAL ANALYSIS
+========================================================= */
+
+async function analyzeMultimodal(question){
+
+    const files =
+        Object.values(multiSourceFiles)
+        .filter(file => file !== null);
+
+
+    if(files.length < 2){
+
+        alert(
+            "Please upload at least 2 different sources for multimodal reasoning."
+        );
+
+        return;
+    }
+
+
+    const formData = new FormData();
+
+
+    /*
+       IMPORTANT:
+       EVERY selected file is sent together.
+       Backend receives:
+       files[]
+       files[]
+       files[]
+       ...
+    */
+
+    files.forEach(function(file){
+
+        formData.append(
+            "files",
+            file,
+            file.name
+        );
+
+    });
+
+
+    formData.append(
+        "question",
+        question
+    );
+
+
+    await sendAnalysis(
+        "/analyze/multimodal",
+        formData
+    );
+}
+
+
+/* =========================================================
+   BACKEND REQUEST
+========================================================= */
+
+async function sendAnalysis(endpoint,formData){
+
+    setLoading(true);
+
+    clearResultOnly();
+
+
+    try{
+
+        const response = await fetch(
+            BACKEND_URL + endpoint,
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+
+        const contentType =
+            response.headers.get("content-type") || "";
+
+
+        let data;
+
+
+        if(contentType.includes("application/json")){
+
+            data = await response.json();
+
+        }else{
+
+            const text = await response.text();
+
+            throw new Error(
+                "Backend returned non-JSON response: " +
+                text.substring(0,300)
+            );
+        }
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Analysis failed."
+            );
+        }
+
+
+        if(data.success === false){
+
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Analysis failed."
+            );
+        }
+
+
+        displayResult(data);
+
+
+    }catch(error){
+
+        console.error("MIRA ERROR:",error);
+
+        showError(
+            "Backend connection/analysis error: " +
+            error.message
+        );
+
+    }finally{
+
+        setLoading(false);
+
+    }
+}
+
+
+/* =========================================================
+   DISPLAY RESULT
+========================================================= */
+
+function displayResult(data){
+
+    const resultBox =
+        document.getElementById("resultBox");
+
+    const resultContent =
+        document.getElementById("resultContent");
+
+
+    const answer =
+        data.answer ||
+        data.final_answer ||
+        data.result ||
+        "No final answer returned.";
+
+
+    let html = "";
+
+
+    /* FINAL ANSWER */
+
+    html += `
+        <div class="result-section">
+            <h4>🎯 Final Answer</h4>
+
+            <p class="answer">
+                ${escapeHTML(String(answer))}
+            </p>
+        </div>
+    `;
+
+
+    /* EVIDENCE */
+
+    if(data.evidence){
+
+        html += `
+            <div class="result-section">
+
+                <h4>🔎 Evidence</h4>
+
+                <p>
+                    ${formatValue(data.evidence)}
+                </p>
+
+            </div>
+        `;
+    }
+
+
+    /* CONFIDENCE */
+
+    if(
+        data.confidence !== undefined &&
+        data.confidence !== null
+    ){
+
+        html += `
+            <div class="result-section">
+
+                <h4>📌 Confidence</h4>
+
+                <div class="badges">
+
+                    <span class="badge">
+                        ${escapeHTML(String(data.confidence))}
+                    </span>
+
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    /* SOURCES */
+
+    if(data.sources){
+
+        html += `
+            <div class="result-section">
+
+                <h4>📚 Sources</h4>
+
+                ${formatValue(data.sources)}
+
+            </div>
+        `;
+    }
+
+
+    /* MODALITIES */
+
+    if(data.modalities){
+
+        html += `
+            <div class="result-section">
+
+                <h4>🧩 Detected Modalities</h4>
+
+                <div class="badges">
+                    ${formatBadges(data.modalities)}
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    /* UPLOADED FILES */
+
+    if(data.uploaded_files){
+
+        html += `
+            <div class="result-section">
+
+                <h4>📁 Uploaded Sources</h4>
+
+                ${formatValue(data.uploaded_files)}
+
+            </div>
+        `;
+    }
+
+
+    /* SOURCE COUNT */
+
+    if(data.source_count !== undefined){
+
+        html += `
+            <div class="result-section">
+
+                <h4>🔢 Source Count</h4>
+
+                <p>
+                    ${escapeHTML(String(data.source_count))}
+                    sources analyzed together.
+                </p>
+
+            </div>
+        `;
+    }
+
+
+    /* REASONING */
+
+    if(data.reasoning){
+
+        html += `
+            <div class="result-section">
+
+                <h4>🧠 Reasoning</h4>
+
+                ${formatValue(data.reasoning)}
+
+            </div>
+        `;
+    }
+
+
+    if(data.reasoning_steps){
+
+        html += `
+            <div class="result-section">
+
+                <h4>🧠 Reasoning Steps</h4>
+
+                ${formatValue(data.reasoning_steps)}
+
+            </div>
+        `;
+    }
+
+
+    /* WARNING */
+
+    if(data.warning){
+
+        html += `
+            <div class="result-section">
+
+                <h4>⚠️ Note</h4>
+
+                <p>
+                    ${escapeHTML(String(data.warning))}
+                </p>
+
+            </div>
+        `;
+    }
+
+
+    /* MESSAGE */
+
+    if(
+        data.message &&
+        !data.answer &&
+        !data.final_answer
+    ){
+
+        html += `
+            <div class="result-section">
+
+                <h4>ℹ️ Message</h4>
+
+                <p>
+                    ${escapeHTML(String(data.message))}
+                </p>
+
+            </div>
+        `;
+    }
+
+
+    resultContent.innerHTML = html;
+
+    resultBox.classList.add("active");
+
+    resultBox.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+
+/* =========================================================
+   FORMAT VALUE
+========================================================= */
+
+function formatValue(value){
+
+    if(value === null || value === undefined){
+        return "";
+    }
+
+
+    if(Array.isArray(value)){
+
+        return `
+            <ul>
+                ${
+                    value.map(item =>
+                        `<li>${escapeHTML(String(item))}</li>`
+                    ).join("")
+                }
+            </ul>
+        `;
+    }
+
+
+    if(typeof value === "object"){
+
+        return `
+            <pre style="
+                white-space:pre-wrap;
+                color:#b5c5d8;
+                line-height:1.6;
+                font-family:inherit;
+            ">${escapeHTML(
+                JSON.stringify(value,null,2)
+            )}</pre>
+        `;
+    }
+
+
+    return `
+        <p>
+            ${escapeHTML(String(value))}
+        </p>
+    `;
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+function formatBadges(value){
+
+    let items = [];
+
+    if(Array.isArray(value)){
+        items = value;
+    }else{
+        items = [value];
+    }
+
+    return items.map(item => {
+
+        return `
+            <span class="badge">
+                ${escapeHTML(String(item))}
+            </span>
+        `;
+
+    }).join("");
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function setLoading(show){
+
+    const loading =
+        document.getElementById("loading");
+
+    const button =
+        document.getElementById("analyzeBtn");
+
+
+    if(show){
+
+        loading.classList.add("active");
+
+        button.disabled = true;
+
+        button.textContent =
+            "⏳ Analyzing...";
+
+    }else{
+
+        loading.classList.remove("active");
+
+        button.disabled = false;
+
+        button.textContent =
+            "✦ Analyze with MIRA";
+    }
+}
+
+
+/* =========================================================
+   CLEAR RESULT
+========================================================= */
+
+function clearResultOnly(){
+
+    document
+        .getElementById("resultBox")
+        .classList.remove("active");
+
+    document
+        .getElementById("resultContent")
+        .innerHTML = "";
+}
+
+
+/* =========================================================
+   CLEAR WORKSPACE
+========================================================= */
+
+function clearWorkspace(){
+
+    document.getElementById("question").value = "";
+
+    selectedSingleFile = null;
+
+    document.getElementById("singleFile").value = "";
+
+    document.getElementById("singleFileName").textContent = "";
+
+
+    multiSourceFiles = {
+        1:null,
+        2:null,
+        3:null,
+        4:null,
+        5:null,
+        6:null
+    };
+
+
+    const inputs = [
+        "sourceImage",
+        "sourceVideo",
+        "sourceAudio",
+        "sourceChart",
+        "sourceDocument",
+        "sourceTable"
+    ];
+
+
+    inputs.forEach(function(id){
+
+        const element =
+            document.getElementById(id);
+
+        if(element){
+            element.value = "";
+        }
+
+    });
+
+
+    for(let i=1;i<=6;i++){
+
+        document.getElementById(
+            "sourceName" + i
+        ).textContent = "";
+
+    }
+
+
+    updateMultimodalCount();
+
+    clearResultOnly();
+
+}
+
+
+/* =========================================================
+   BACK TO MODES
+========================================================= */
+
+function backToModes(){
+
+    document
+        .getElementById("workspace")
+        .classList.remove("active");
+
+    document
+        .getElementById("modesSection")
+        .style.display = "block";
+
+    clearWorkspace();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+    localStorage.removeItem("miraLoggedIn");
+
+    window.location.href = "login.html";
+}
+
+
+/* =========================================================
+   OPTIONAL LOGIN CHECK
+========================================================= */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+    /*
+       If you want dashboard to require login,
+       uncomment the following block.
+    */
+
+    /*
+    if(localStorage.getItem("miraLoggedIn") !== "true"){
+        window.location.href = "login.html";
+        return;
+    }
+    */
+
+});
+
+</script>
+
+</body>
+</html>
