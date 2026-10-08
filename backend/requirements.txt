@@ -1,0 +1,10 @@
+Flask
+flask-cors
+python-dotenv
+pypdf
+pandas
+openpyxl
+Pillow
+opencv-python
+pytesseract
+gunicorn
